@@ -6,9 +6,15 @@ unless respond_to? :require_relative
 end
 require_relative '../lib/javim'
 
-jarfile = '~/Dropbox/hoot/SOFTBANK_MEXA_EMULATOR23/lib/stubclasses.zip'
-table = Javim.global.merge Javim.local(jarfile)
-keywords = Javim.keywords_of ARGV.shift
+javafile = ARGV.shift
+classfile = ARGV.shift
+table =
+  if classfile
+    Javim.global.merge Javim.local(classfile)
+  else
+    Javim.global
+  end
+keywords = Javim.keywords_of javafile
 puts keywords.map {|k|
   (table[k] || []).map {|package|
     "import #{package};"
