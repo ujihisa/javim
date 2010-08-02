@@ -29,3 +29,20 @@ describe 'Javim.global' do
     table.values.should be_include ['java.util.Vector']
   end
 end
+
+describe 'javim command' do
+  it 'shows the list of import statements the java file needs' do
+    @javim_cmd = File.dirname(__FILE__) + '/../bin/javim'
+    @java_file = File.dirname(__FILE__) + '/src/Hello.java'
+    `#{@javim_cmd} #{@java_file}`.chomp.should ==
+      'import java.util.Vector;'
+  end
+
+  it 'also shows import statements for packages given as the 2nd argument' do
+    @javim_cmd = File.dirname(__FILE__) + '/../bin/javim'
+    @java_file = File.dirname(__FILE__) + '/src/Hello.java'
+    @jar_file = File.dirname(__FILE__) + '/fixture.jar'
+    `#{@javim_cmd} #{@java_file} #{@jar_file}`.should ==
+      "import java.util.Vector;\nimport src.Hello;\n"
+  end
+end
