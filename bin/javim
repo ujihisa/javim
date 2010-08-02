@@ -10,7 +10,11 @@ javafile = ARGV.shift
 classfile = ARGV.shift
 table =
   if classfile
-    Javim.global.merge Javim.local(classfile)
+    if File.directory? classfile
+      raise 'not implemented yet'
+    else
+      Javim.global.merge Javim.local(classfile)
+    end
   else
     Javim.global
   end
