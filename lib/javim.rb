@@ -4,7 +4,7 @@ module Javim
   module_function
 
   def local(jarfile)
-    jarfile2tuples(jarfile).
+    classlist2tuples(`jar tf #{jarfile}`).
       inject({}) {|memo, (c, p)| memo[c] ||= []; memo[c] << p; memo }
   end
 
@@ -54,15 +54,15 @@ module Javim
   def global_cache
     jarfile = '/System/Library/Frameworks/JavaVM.framework/Classes/classes.jar'
     File.open(@cachefile, 'w') do |io|
-      io.puts jarfile2tuples(jarfile).
+      io.puts classlist2tuples(`jar tf #{jarfile}`).
         map {|c, p| c + ': "' + p + '"' }.
         sort
     end
   end
 
-  # jarfile2tuples :: String -> [(ClassName, PackageName)]
-  def jarfile2tuples(jarfile)
-    `jar tf #{jarfile}`.each_line.
+  # classlist2tuples :: String -> [(ClassName, PackageName)]
+  def classlist2tuples(jarfile)
+    jarfile.each_line.
       map(&:chomp).
       select {|i| /\/[A-Z]\w+\.class$/ =~ i }.
       reject {|i| /\$/ =~ i }.
