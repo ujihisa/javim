@@ -4,7 +4,6 @@ module Javim
   module_function
 
   def local(jarfile)
-    return @local if @local
     jarfile2tuples(jarfile).
       inject({}) {|memo, (c, p)| memo[c] ||= []; memo[c] << p; memo }
   end
@@ -12,7 +11,6 @@ module Javim
   @cachefile = File.expand_path('~/.javim_cache')
 
   def global
-    return @global if @global
     File.exist?(@cachefile) or global_cache()
     table = {}
     File.read(@cachefile).each_line do |line|
@@ -20,7 +18,7 @@ module Javim
       table[key] ||= []
       table[key] << value[/"(.*?)"/, 1]
     end
-    @global = table
+    table
   end
 
   def global!
