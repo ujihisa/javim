@@ -7,14 +7,10 @@ end
 require_relative '../lib/javim'
 
 javafile = ARGV.shift
-classfile = ARGV.shift
+classfile_or_dirname = ARGV.shift
 table =
-  if classfile
-    if File.directory? classfile
-      raise 'not implemented yet'
-    else
-      Javim.global.merge Javim.local(classfile)
-    end
+  if classfile_or_dirname
+    Javim.global.merge Javim.local(classfile_or_dirname)
   else
     Javim.global
   end

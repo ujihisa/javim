@@ -1,11 +1,19 @@
+require 'pathname'
 require 'strscan'
 
 module Javim
   module_function
 
   def local(jarfile)
-    classlist2tuples(`jar tf #{jarfile}`).
-      inject({}) {|memo, (c, p)| memo[c] ||= []; memo[c] << p; memo }
+    tmp =
+      if File.directory? jarfile
+        Dir.glob(jarfile + '/**/*.class').map {|classname|
+          Pathname(classname).relative_path_from(Pathname(jarfile))
+        }.join '\n'
+      else
+        `jar tf #{jarfile}`
+      end
+    classlist2tuples(tmp).inject({}) {|memo, (c, p)| memo[c] ||= []; memo[c] << p; memo }
   end
 
   @cachefile = File.expand_path('~/.javim_cache')

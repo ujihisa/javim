@@ -22,6 +22,14 @@ describe 'Javim.local("fixture.jar")' do
   end
 end
 
+describe 'Javim.local(".")' do
+  it 'is same to the case of passing fixture.jar' do
+    table = Javim.local File.dirname(__FILE__) + '/'
+    table.keys.should be_include 'Hello'
+    table.values.should be_include ['src.Hello']
+  end
+end
+
 describe 'Javim.global' do
   it 'is a hash of classname and packagename of java builtin libraries like Vector' do
     table = Javim.global
